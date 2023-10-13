@@ -9,7 +9,7 @@ v_element *v_get(const vector *const v, const size_t index)
  * Internal function.
  * Sets `el->type = type` and `el->data` to the value of the next argument in `*args`.
  */
-void __set_element(v_element *const el, const char type, va_list *const args)
+void __set_element(v_element *const el, const v_eltype type, va_list *const args)
 {
 	switch (el->type = type)
 	{
@@ -28,12 +28,14 @@ void __set_element(v_element *const el, const char type, va_list *const args)
 	}
 }
 
-void v_set(vector *const v, const size_t index, const char type, ...)
+bool v_set(vector *const v, const size_t index, const v_eltype type, ...)
 {
+	if (index >= v->size)
+		return false;
 	va_list args;
 	va_start(args, 1);
-	v_element *el = v_get(v, index);
-	__set_element(el, type, &args);
+	__set_element(v->data + index, type, &args);
+	return true;
 }
 
 void v_push(vector *const v, const char *types, ...)

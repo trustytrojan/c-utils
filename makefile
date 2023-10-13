@@ -16,7 +16,10 @@ compile_debug: prepare
 	gcc $(CFLAGS) -g -shared -o lib/libvector.so src/*.c
 
 install: compile
-	cp lib/libvector.so
+	cp lib/libvector.so /usr/lib
+
+uninstall:
+	rm /usr/lib/libvector.so
 
 test: compile_debug
 	gcc $(CFLAGS) test.c -Llib $(LOCAL_LIB) -lvector

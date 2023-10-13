@@ -1,11 +1,11 @@
 #ifndef __VECTOR__
 #define __VECTOR__
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdarg.h>
-#include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define INITIAL_CAPACITY 8
 #define GROWTH_FACTOR 1.5
@@ -14,20 +14,23 @@ typedef union
 {
 	long l;
 	double d;
-} v_data;
+} v_eldata;
 
-#define V_CHAR 'c'
-#define V_SIGNED 'i'
-#define V_UNSIGNED 'u'
-#define V_FLOAT 'f'
-#define V_BOOL 'b'
-#define V_STRING 's'
-#define V_PTR 'p'
+typedef enum
+{
+	V_CHAR = 'c',
+	V_SIGNED = 'i',
+	V_UNSIGNED = 'u',
+	V_FLOAT = 'f',
+	V_BOOL = 'b',
+	V_STRING = 's',
+	V_PTR = 'p'
+} v_eltype;
 
 typedef struct
 {
-	char type;
-	v_data data;
+	v_eltype type;
+	v_eldata data;
 } v_element;
 
 typedef struct
@@ -40,40 +43,46 @@ typedef struct
 // Create a new vector.
 vector *v_new();
 
-// Free all memory used by `v`. This will render all further operations on it as undefined behavior.
+// Free all memory used by `v`. This will render all further operations on it as
+// undefined behavior.
 void v_free(vector *const v);
 
-// Resize `v`'s internal array to `new_capacity`. Calling with `new_capacity < v->size` will result in data loss.
+// Resize `v`'s internal array to `new_capacity`. Calling with `new_capacity <
+// v->size` will result in data loss.
 void v_resize(vector *const v, const size_t new_capacity);
 
-// Return a pointer to the `v_element` at `index` in `v`. Passing an out-of-bounds `index` will return `NULL`.
+// Return a pointer to the `v_element` at `index` in `v`. Passing an
+// out-of-bounds `index` will return `NULL`.
 v_element *v_get(const vector *const v, const size_t index);
 
 /**
- * Set the element at `index` in `v` to a new value.
- * Passing an out-of-bounds `index` will cause an invalid write.
- * Any arguments after the first are ignored.
+ * Set the element at `index` in `v` to a new value. Any arguments after the
+ * first are ignored. Returns whether the operation was successful. Passing an
+ * out-of-bounds index will return false.
  */
-void v_set(vector *const v, const size_t index, const char type, ...);
+bool v_set(vector *const v, const size_t index, const v_eltype type, ...);
 
 /**
  * Push one or more elements into `v`.
  * ### Type specifiers
- * You must supply valid type specifiers for each element to push. Incorrectly typing values will result in undefined behavior.
+ * You must supply valid type specifiers for each element to push. Incorrectly
+ * typing values will result in undefined behavior.
  * - `i` Signed integer. Accepts any integer type.
- * - `u` Unsigned integer. Accepts any integer type. Will be interpreted as unsigned when printing.
+ * - `u` Unsigned integer. Accepts any integer type. Will be interpreted as
+ * unsigned when printing.
  * - `f` Floating point. Accepts `float` or `double`.
  * - `c` Character. Only accepts `char`.
  * - `s` String. Only accepts `char *`.
- * - `b` Boolean. Accepts any integer type. Will print as either `true` or `false`.
+ * - `b` Boolean. Accepts any integer type. Will print as either `true` or
+ * `false`.
  * - `p` Pointer. Accepts any pointer type.
- * 
+ *
  * ### Correct usage
  * ```c
  * vector *v = v_new();
  * v_push(v, "isc", 5, "five", '5');
  * ```
- * 
+ *
  * ### Erroneous usage
  * ```c
  * v_push(v, "isc", '5', 5, "five");
