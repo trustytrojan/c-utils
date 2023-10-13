@@ -1,17 +1,23 @@
 CFLAGS = -Wall -Werror -Wextra -Wno-varargs
 
-shared:
+# Tells the linker to make sure the compiled executable looks for libvector.so in ./lib and not the usual /usr/lib
+LOCAL_LIB = -Wl,-rpath=lib
+
+compile: prepare
 	clear
+	mkdir -p lib
 	gcc $(CFLAGS) -shared -o lib/libvector.so src/*.c
 
-static:
+prepare:
 	clear
-	gcc $(CFLAGS) vector_mem.c -o obj/vector_mem.o
-	gcc $(CFLAGS) vector_ops.c -o obj/vector_ops.o
-	gcc $(CFLAGS) vector_print.c -o obj/vector_print.o
-	gcc $(CFLAGS) vector_push.c -o obj/vector_push.o
-	ar rcs libvector.a obj/*
+	mkdir -p lib
 
-test:
-	clear
-	gcc $(CFLAGS) test.c -lvector -Llib
+compile_debug: prepare
+	gcc $(CFLAGS) -g -shared -o lib/libvector.so src/*.c
+
+install: compile
+	cp lib/libvector.so
+
+test: compile_debug
+	gcc $(CFLAGS) test.c -Llib $(LOCAL_LIB) -lvector
+	valgrind ./a.out

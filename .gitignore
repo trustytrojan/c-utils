@@ -1,6 +1,4 @@
 lib
-obj
 bin
 *.out
 *.so
-*.a
