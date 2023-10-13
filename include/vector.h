@@ -43,16 +43,13 @@ typedef struct
 // Create a new vector.
 vector *v_new();
 
-// Free all memory used by `v`. This will render all further operations on it as
-// undefined behavior.
+// Free all memory used by `v`. This will render all further operations on it as undefined behavior.
 void v_free(vector *const v);
 
-// Resize `v`'s internal array to `new_capacity`. Calling with `new_capacity <
-// v->size` will result in data loss.
+// Resize `v`'s internal array to `new_capacity`. Calling with `new_capacity < v->size` will result in data loss.
 void v_resize(vector *const v, const size_t new_capacity);
 
-// Return a pointer to the `v_element` at `index` in `v`. Passing an
-// out-of-bounds `index` will return `NULL`.
+// Return a pointer to the `v_element` at `index` in `v`. Passing an out-of-bounds `index` will return `NULL`.
 v_element *v_get(const vector *const v, const size_t index);
 
 /**

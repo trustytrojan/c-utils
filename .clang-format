@@ -1,5 +1,4 @@
 IndentWidth: 8
 UseTab: Always
 BreakBeforeBraces: Allman
-AllowShortIfStatementsOnASingleLine: true
 IndentCaseLabels: false
