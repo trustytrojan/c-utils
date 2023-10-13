@@ -5,25 +5,25 @@ void __print_element(const v_element *const el, const bool debug)
 	switch (el->type)
 	{
 	case V_SIGNED:
-		printf("%li", el->data.l);
+		printf("%s%li", debug ? "(i) " : "", el->data.l);
 		break;
 	case V_UNSIGNED:
 		printf("%s%lu", debug ? "(u) " : "", (unsigned long)el->data.l);
 		break;
 	case V_FLOAT:
-		printf("%lf", el->data.d);
+		printf("%s%lf", debug ? "(f) " : "", el->data.d);
 		break;
 	case V_CHAR:
-		printf("'%c'", (char)el->data.l);
+		printf("%s'%c'", debug ? "(c) " : "", (char)el->data.l);
 		break;
 	case V_STRING:
-		printf("\"%s\"", (char *)el->data.l);
+		printf("%s\"%s\"", debug ? "(s) " : "", (char *)el->data.l);
 		break;
 	case V_BOOL:
-		printf("%s", el->data.l ? "true" : "false");
+		printf("%s%s", debug ? "(b) " : "", el->data.l ? "true" : "false");
 		break;
 	case V_PTR:
-		printf("%p", (void *)el->data.l);
+		printf("%s%p", debug ? "(p) " : "", (void *)el->data.l);
 		break;
 	}
 }
