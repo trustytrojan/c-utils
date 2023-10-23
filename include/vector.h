@@ -60,18 +60,16 @@ v_element *v_get(const vector *const v, const size_t index);
 bool v_set(vector *const v, const size_t index, const v_eltype type, ...);
 
 /**
- * Push one or more elements into `v`.
+ * Push one or more elements to the end of `v`.
  * ### Type specifiers
  * You must supply valid type specifiers for each element to push. Incorrectly
  * typing values will result in undefined behavior.
  * - `i` Signed integer. Accepts any integer type.
- * - `u` Unsigned integer. Accepts any integer type. Will be interpreted as
- * unsigned when printing.
+ * - `u` Unsigned integer. Accepts any integer type. Will be interpreted as unsigned when printing.
  * - `f` Floating point. Accepts `float` or `double`.
  * - `c` Character. Only accepts `char`.
  * - `s` String. Only accepts `char *`.
- * - `b` Boolean. Accepts any integer type. Will print as either `true` or
- * `false`.
+ * - `b` Boolean. Accepts any integer type. Will print as either `true` or `false`.
  * - `p` Pointer. Accepts any pointer type.
  *
  * ### Correct usage
@@ -79,7 +77,6 @@ bool v_set(vector *const v, const size_t index, const v_eltype type, ...);
  * vector *v = v_new();
  * v_push(v, "isc", 5, "five", '5');
  * ```
- *
  * ### Erroneous usage
  * ```c
  * v_push(v, "isc", '5', 5, "five");
@@ -88,6 +85,21 @@ bool v_set(vector *const v, const size_t index, const v_eltype type, ...);
  * The `v_print` call will segfault due to reading at address `0x5`.
  */
 void v_push(vector *const v, const char *const types, ...);
+
+/**
+ * Insert one or more elements into `v` at `index`.
+ * ### Type specifiers
+ * You must supply valid type specifiers for each element to push. Incorrectly
+ * typing values will result in undefined behavior.
+ * - `i` Signed integer. Accepts any integer type.
+ * - `u` Unsigned integer. Accepts any integer type. Will be interpreted as unsigned when printing.
+ * - `f` Floating point. Accepts `float` or `double`.
+ * - `c` Character. Only accepts `char`.
+ * - `s` String. Only accepts `char *`.
+ * - `b` Boolean. Accepts any integer type. Will print as either `true` or `false`.
+ * - `p` Pointer. Accepts any pointer type.
+ */
+void v_insert(vector *const v, size_t index, const char *types, ...);
 
 // Print the elements of `v` to `stdout`.
 void v_print(const vector *const v);

@@ -7,7 +7,8 @@ v_element *v_get(const vector *const v, const size_t index)
 
 /**
  * Internal function.
- * Sets `el->type = type` and `el->data` to the value of the next argument in `*args`.
+ * Sets `el->type = type` and `el->data` to the value of the next argument in
+ * `*args`.
  */
 void __set_element(v_element *const el, const v_eltype type, va_list *const args)
 {
@@ -38,10 +39,14 @@ bool v_set(vector *const v, const size_t index, const v_eltype type, ...)
 	return true;
 }
 
-void v_push(vector *const v, const char *types, ...)
+/**
+ * Internal function. Performs the insertion of elements at any `index`.
+ * `*args` must be initialized using the macro `va_start` BEFORE being passed to
+ * `__insert`.
+ */
+void __insert(vector *const v, size_t index, const size_t num_elements, const char *types, va_list *const args)
 {
-	const int num_elements = strlen(types);
-
+	// accomodate for new elements
 	size_t new_size = v->size + num_elements;
 	if (new_size > v->capacity)
 	{
@@ -49,8 +54,32 @@ void v_push(vector *const v, const char *types, ...)
 		v_resize(v, v->capacity);
 	}
 
-	va_list args;
-	va_start(args, num_elements);
+	// move existing elements to the right if needed
+	if (index < v->size)
+		for (size_t i = v->size - 1; i >= index; --i)
+			v->data[i + num_elements] = v->data[i];
+
+	v->size = new_size;
+
+	// insert the new elements
 	for (; *types != '\0'; ++types)
-		__set_element(v->data + (v->size++), *types, &args);
+		__set_element(v->data + (index++), *types, args);
+
+	free(args);
+}
+
+void v_push(vector *const v, const char *const types, ...)
+{
+	const int num_elements = strlen(types);
+	va_list *const args = malloc(sizeof(va_list));
+	va_start(*args, num_elements);
+	__insert(v, v->size, num_elements, types, args);
+}
+
+void v_insert(vector *const v, const size_t index, const char *const types, ...)
+{
+	const int num_elements = strlen(types);
+	va_list *const args = malloc(sizeof(va_list));
+	va_start(*args, num_elements);
+	__insert(v, index, num_elements, types, args);
 }
