@@ -1,4 +1,6 @@
 IndentWidth: 8
 UseTab: Always
+ColumnLimit: 0
 BreakBeforeBraces: Allman
+AllowShortIfStatementsOnASingleLine: true
 IndentCaseLabels: false

@@ -42,7 +42,14 @@ void v_print(const vector *const v)
 
 void __debug_print(const vector *const v)
 {
+	if (!v->size)
+	{
+		puts("[]");
+		return;
+	}
+
 	puts("[");
+	
 	for (size_t i = 0; i < v->size; ++i)
 	{
 		printf("\t\t%ld: ", i);
@@ -51,16 +58,13 @@ void __debug_print(const vector *const v)
 			putchar(',');
 		putchar('\n');
 	}
+	
 	puts("\t]");
 }
 
 void v_debug(const vector *const v)
 {
-	printf("vector@%p {\n", v);
-	printf("\tcapacity: %ld\n", v->capacity);
-	printf("\tsize: %ld\n", v->size);
-	printf("\tdata: %p\n", v->data);
-	printf("\t*data: ");
+	printf("vector @ %p -> {\n\tsize: %ld\n\tcapacity: %ld\n\tdata: %p -> ", v, v->size, v->capacity, v->data);
 	__debug_print(v);
 	puts("}");
 }

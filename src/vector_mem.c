@@ -2,12 +2,54 @@
 
 vector *v_new()
 {
-	vector *v = malloc(sizeof(vector));
+	vector *const v = malloc(sizeof(vector));
+
+	if (!v)
+	{
+		perror("v_new: malloc");
+		return NULL;
+	}
+
 	v->capacity = INITIAL_CAPACITY;
 	v->size = 0;
-	if (!(v->data = malloc(INITIAL_CAPACITY * sizeof(v_element))))
+
+	if (!(v->data = malloc(v->capacity * sizeof(v_element))))
+	{
 		perror("v_new: malloc");
+		free(v);
+		return NULL;
+	}
+
 	return v;
+}
+
+void *memdup(const void *const src, const size_t size)
+{
+	void *const dest = malloc(size);
+
+	if (!dest)
+	{
+		perror("memdup: malloc");
+		return NULL;
+	}
+
+	return memcpy(dest, src, size);
+}
+
+vector *v_copy(const vector *const old)
+{
+	vector *const new = memdup(old, sizeof(vector));
+	
+	if (!new)
+		return NULL;
+	
+	if (!(new->data = memdup(old->data, old->capacity * sizeof(v_element))))
+	{
+		free(new);
+		return NULL;
+	}
+
+	return new;
 }
 
 void v_free(vector *const v)
@@ -16,8 +58,21 @@ void v_free(vector *const v)
 	free(v);
 }
 
-void v_resize(vector *const v, const size_t new_capacity)
+bool v_resize(vector *const v, const size_t new_capacity)
 {
-	if (!(v->data = realloc(v->data, new_capacity * sizeof(v_element))))
+	v_element *const new_data = realloc(v->data, new_capacity * sizeof(v_element));
+
+	if (!new_data)
+	{
 		perror("v_resize: realloc");
+		return false;
+	}
+
+	v->data = new_data;
+	v->capacity = new_capacity;
+
+	if (v->size > v->capacity)
+		v->size = v->capacity;
+
+	return true;
 }

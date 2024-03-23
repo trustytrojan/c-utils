@@ -1,5 +1,8 @@
 {
 	"files.associations": {
-		"vector.h": "c"
+		".clangd": "yaml",
+		"*.ext": "c",
+		"vector.h": "c",
+		"stddef.h": "c"
 	}
 }

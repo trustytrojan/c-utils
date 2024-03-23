@@ -40,14 +40,17 @@ typedef struct
 	v_element *data;
 } vector;
 
-// Create a new vector.
+// Create a new empty vector.
 vector *v_new();
+
+// Copy a vector.
+vector *v_copy(const vector *const v);
 
 // Free all memory used by `v`. This will render all further operations on it as undefined behavior.
 void v_free(vector *const v);
 
 // Resize `v`'s internal array to `new_capacity`. Calling with `new_capacity < v->size` will result in data loss.
-void v_resize(vector *const v, const size_t new_capacity);
+bool v_resize(vector *const v, const size_t new_capacity);
 
 // Return a pointer to the `v_element` at `index` in `v`. Passing an out-of-bounds `index` will return `NULL`.
 v_element *v_get(const vector *const v, const size_t index);
