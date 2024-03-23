@@ -56,8 +56,11 @@ vector *v_new();
  */
 bool v_init(vector *const v);
 
-// Copy a vector.
-vector *v_copy(const vector *const v);
+// Duplicates a vector on the heap using `v_copy`.
+vector *v_dup(const vector *const v);
+
+// Copy the contents of `src` to `dest`.
+void v_copy(vector *dest, const vector *src);
 
 // Free all memory used by `v`.
 // This will render all further operations on it as undefined behavior.

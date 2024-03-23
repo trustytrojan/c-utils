@@ -21,44 +21,50 @@ vector *v_new()
 
 bool v_init(vector *const v)
 {
-	v->capacity = V_INITIAL_CAPACITY;
-	v->size = 0;
+	v_element *const data = malloc(V_INITIAL_CAPACITY * sizeof(v_element));
 
-	if (!(v->data = malloc(V_INITIAL_CAPACITY * sizeof(v_element))))
+	if (!data)
 	{
 		perror("v_init: malloc");
 		return false;
 	}
 
+	v->capacity = V_INITIAL_CAPACITY;
+	v->size = 0;
+	v->data = data;
+
 	return true;
 }
 
-void *memdup(const void *const src, const size_t size)
+bool v_copy(vector *const dest, const vector *const src)
 {
-	void *const dest = malloc(size);
+	const size_t mem_size = src->size * sizeof(v_element);
+	v_element *const dest_data = realloc(dest->data, mem_size);
 
-	if (!dest)
+	if (!dest_data)
 	{
-		perror("memdup: malloc");
-		return NULL;
+		perror("v_copy: malloc");
+		return false;
 	}
 
-	return memcpy(dest, src, size);
+	dest->capacity = src->capacity;
+	dest->size = src->size;
+	dest->data = memcpy(dest_data, src->data, mem_size);
+
+	return true;
 }
 
-vector *v_copy(const vector *const old)
+vector *v_dup(const vector *const old)
 {
-	vector *const new = memdup(old, sizeof(vector));
-	
+	vector *const new = malloc(sizeof(vector));
+
 	if (!new)
-		return NULL;
-	
-	if (!(new->data = memdup(old->data, old->capacity * sizeof(v_element))))
 	{
-		free(new);
+		perror("v_dup: malloc");
 		return NULL;
 	}
 
+	v_copy(new, old);
 	return new;
 }
 
