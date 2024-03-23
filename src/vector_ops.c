@@ -7,8 +7,7 @@ v_element *v_get(const vector *const v, const size_t index)
 
 /**
  * Internal function.
- * Sets `el->type = type` and `el->data` to the value of the next argument in
- * `*args`.
+ * Sets `el->type = type` and `el->data` to the value of the next argument in `*args`.
  */
 void __set_element(v_element *const el, const v_eltype type, va_list *const args)
 {
@@ -40,17 +39,15 @@ bool v_set(vector *const v, const size_t index, const v_eltype type, ...)
 }
 
 /**
- * Internal function. Performs the insertion of elements at any `index`.
- * `*args` must be initialized using the macro `va_start` BEFORE being passed to
- * `__insert`.
+ * Internal function. Grows `v` if necessary, and calls `__set_element` for each element specified in `types`.
  */
 void __insert(vector *const v, size_t index, const size_t num_elements, const char *types, va_list *const args)
 {
 	// accomodate for new elements
-	size_t new_size = v->size + num_elements;
+	const size_t new_size = v->size + num_elements;
 	if (new_size > v->capacity)
 	{
-		while ((v->capacity *= GROWTH_FACTOR) < new_size);
+		while ((v->capacity *= V_GROWTH_FACTOR) < new_size);
 		v_resize(v, v->capacity);
 	}
 
@@ -62,24 +59,22 @@ void __insert(vector *const v, size_t index, const size_t num_elements, const ch
 	v->size = new_size;
 
 	// insert the new elements
-	for (; *types != '\0'; ++types)
+	for (; *types; ++types)
 		__set_element(v->data + (index++), *types, args);
-
-	free(args);
 }
 
 void v_push(vector *const v, const char *const types, ...)
 {
 	const int num_elements = strlen(types);
-	va_list *const args = malloc(sizeof(va_list));
-	va_start(*args, num_elements);
-	__insert(v, v->size, num_elements, types, args);
+	va_list args;
+	va_start(args, num_elements);
+	__insert(v, v->size, num_elements, types, &args);
 }
 
 void v_insert(vector *const v, const size_t index, const char *const types, ...)
 {
 	const int num_elements = strlen(types);
-	va_list *const args = malloc(sizeof(va_list));
-	va_start(*args, num_elements);
-	__insert(v, index, num_elements, types, args);
+	va_list args;
+	va_start(args, num_elements);
+	__insert(v, index, num_elements, types, &args);
 }

@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define INITIAL_CAPACITY 8
-#define GROWTH_FACTOR 1.5
+#define V_INITIAL_CAPACITY 8
+#define V_GROWTH_FACTOR 1.5
 
 typedef union
 {
@@ -40,13 +40,27 @@ typedef struct
 	v_element *data;
 } vector;
 
-// Create a new empty vector.
+/**
+ * Allocates and initializes a `vector` on the heap.
+ * Returns a pointer to the new `vector`, or `NULL` if either the allocation or initialization failed.
+ */
 vector *v_new();
+
+/**
+ * Initializes a vector with the defaults:
+ * - Sets `v->size` to 0.
+ * - Sets `v->capacity` to `V_INITIAL_CAPACITY`.
+ * - Sets `v->data` to a `malloc`'d memory chunk.
+ *
+ * Returns `true` if successful, and `false` otherwise.
+ */
+bool v_init(vector *const v);
 
 // Copy a vector.
 vector *v_copy(const vector *const v);
 
-// Free all memory used by `v`. This will render all further operations on it as undefined behavior.
+// Free all memory used by `v`.
+// This will render all further operations on it as undefined behavior.
 void v_free(vector *const v);
 
 // Resize `v`'s internal array to `new_capacity`. Calling with `new_capacity < v->size` will result in data loss.
@@ -64,9 +78,8 @@ bool v_set(vector *const v, const size_t index, const v_eltype type, ...);
 
 /**
  * Push one or more elements to the end of `v`.
- * ### Type specifiers
- * You must supply valid type specifiers for each element to push. Incorrectly
- * typing values will result in undefined behavior.
+ * #### Type specifiers
+ * You must supply valid type specifiers for each element to push. Incorrectly typing values will result in undefined behavior.
  * - `i` Signed integer. Accepts any integer type.
  * - `u` Unsigned integer. Accepts any integer type. Will be interpreted as unsigned when printing.
  * - `f` Floating point. Accepts `float` or `double`.
@@ -74,26 +87,23 @@ bool v_set(vector *const v, const size_t index, const v_eltype type, ...);
  * - `s` String. Only accepts `char *`.
  * - `b` Boolean. Accepts any integer type. Will print as either `true` or `false`.
  * - `p` Pointer. Accepts any pointer type.
- *
- * ### Correct usage
- * ```c
- * vector *v = v_new();
- * v_push(v, "isc", 5, "five", '5');
- * ```
- * ### Erroneous usage
- * ```c
- * v_push(v, "isc", '5', 5, "five");
- * v_print(v);
- * ```
- * The `v_print` call will segfault due to reading at address `0x5`.
+ * #### Correct usage
+```c
+v_push(v, v->size, "isc", 5, "five", '5');
+```
+ * #### Erroneous usage
+```c
+v_push(v, v->size, "isc", '5', 5, "five");
+```
+ * After this call, if you call `v_print` on `v`, your program will segfault due to reading at address `0x5`.
  */
 void v_push(vector *const v, const char *const types, ...);
 
 /**
  * Insert one or more elements into `v` at `index`.
- * ### Type specifiers
- * You must supply valid type specifiers for each element to push. Incorrectly
- * typing values will result in undefined behavior.
+ * #### Type specifiers
+ * You must supply valid type specifiers for each element to push.
+ * Incorrectly typing values will result in undefined behavior.
  * - `i` Signed integer. Accepts any integer type.
  * - `u` Unsigned integer. Accepts any integer type. Will be interpreted as unsigned when printing.
  * - `f` Floating point. Accepts `float` or `double`.

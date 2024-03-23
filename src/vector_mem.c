@@ -10,17 +10,27 @@ vector *v_new()
 		return NULL;
 	}
 
-	v->capacity = INITIAL_CAPACITY;
-	v->size = 0;
-
-	if (!(v->data = malloc(v->capacity * sizeof(v_element))))
+	if (!v_init(v))
 	{
-		perror("v_new: malloc");
 		free(v);
 		return NULL;
 	}
 
 	return v;
+}
+
+bool v_init(vector *const v)
+{
+	v->capacity = V_INITIAL_CAPACITY;
+	v->size = 0;
+
+	if (!(v->data = malloc(V_INITIAL_CAPACITY * sizeof(v_element))))
+	{
+		perror("v_init: malloc");
+		return false;
+	}
+
+	return true;
 }
 
 void *memdup(const void *const src, const size_t size)
