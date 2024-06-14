@@ -25,6 +25,10 @@ Assuming we have our `vector *v` from above, we can push elements to the end of 
 ```c
 v_push(v, "s", "Hello world!");
 ```
-Since our vector can hold any type of element, the second argument to `v_push` is a type specifier string, similar to the format string of `printf`. To understand its usage, read the docs.
+Since our vector can hold any type of element, the second argument to `v_push` is a type specifier string, similar to the format string of `printf`. To understand its usage, read its comment in [`vector.h`](https://github.com/trustytrojan/libvector/blob/main/include/vector.h).
 
-(readme not finished)
+#### Example: Inserting an integer
+We can insert an integer using the `i` specifier:
+```c
+v_push(v, "i", 5);
+```
