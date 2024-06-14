@@ -54,30 +54,30 @@ vector *v_new();
  *
  * Returns `true` if successful, and `false` otherwise.
  */
-bool v_init(vector *const v);
+bool v_init(vector *v);
 
 // Duplicates a vector on the heap using `v_copy`.
-vector *v_dup(const vector *const v);
+vector *v_dup(const vector *v);
 
 // Copy the contents of `src` to `dest`.
 void v_copy(vector *dest, const vector *src);
 
 // Free all memory used by `v`.
 // This will render all further operations on it as undefined behavior.
-void v_free(vector *const v);
+void v_free(vector *v);
 
 // Resize `v`'s internal array to `new_capacity`. Calling with `new_capacity < v->size` will result in data loss.
-bool v_resize(vector *const v, const size_t new_capacity);
+bool v_resize(vector *v, size_t new_capacity);
 
 // Return a pointer to the `v_element` at `index` in `v`. Passing an out-of-bounds `index` will return `NULL`.
-v_element *v_get(const vector *const v, const size_t index);
+v_element *v_get(const vector *v, size_t index);
 
 /**
  * Set the element at `index` in `v` to a new value. Any arguments after the
  * first are ignored. Returns whether the operation was successful. Passing an
  * out-of-bounds index will return false.
  */
-bool v_set(vector *const v, const size_t index, const v_eltype type, ...);
+bool v_set(vector *v, size_t index, v_eltype type, ...);
 
 /**
  * Push one or more elements to the end of `v`.
@@ -100,7 +100,7 @@ v_push(v, v->size, "isc", '5', 5, "five");
 ```
  * After this call, if you call `v_print` on `v`, your program will segfault due to reading at address `0x5`.
  */
-void v_push(vector *const v, const char *const types, ...);
+void v_push(vector *v, const char *types, ...);
 
 /**
  * Insert one or more elements into `v` at `index`.
@@ -115,12 +115,12 @@ void v_push(vector *const v, const char *const types, ...);
  * - `b` Boolean. Accepts any integer type. Will print as either `true` or `false`.
  * - `p` Pointer. Accepts any pointer type.
  */
-void v_insert(vector *const v, size_t index, const char *types, ...);
+void v_insert(vector *v, size_t index, const char *types, ...);
 
 // Print the elements of `v` to `stdout`.
-void v_print(const vector *const v);
+void v_print(const vector *v);
 
 // Print debug info about `v` to `stdout`.
-void v_debug(const vector *const v);
+void v_debug(const vector *v);
 
 #endif
